@@ -22,7 +22,6 @@ public class MovieManager {
                 .filter(movie -> movie.getVote_average() < 7.0)
                 .sorted(Comparator.comparing(TMDbData.Movie::getVote_average).reversed())
                 .collect(Collectors.toList());
-
         topRated.forEach(movie -> {
             List<TMDbData.Genre> genres = movie.getGenre_ids().stream()
                     .map(genreMap::get)
@@ -44,31 +43,22 @@ public class MovieManager {
                 .filter(review -> review.getAuthor() != null)
                 .sorted(Comparator.comparing(TMDbData.Review::getAuthor).reversed())
                 .collect(Collectors.toList());
-        for (TMDbData.Review review : topReviews) {
-            System.out.println("Autor: " + review.getAuthor());
-            System.out.println("Contenido: " + review.getContent());
-            System.out.println("------------------------");
-        }
+        topReviews.forEach(review -> System.out.printf("Autor:" + review.getAuthor() +
+                "\nContenido:" + review.getContent() + "\n------------------------\n"));
     }
 
     public void printPopularMovies() throws IOException {
         List<TMDbData.PopularMovie> popularMovies = apiClient.fetchPopularMovies();
-        for (TMDbData.PopularMovie popularMovie : popularMovies) {
-            System.out.println("Título: " + popularMovie.getTitle());
-            System.out.println("Calificación: " + popularMovie.getVote_average()*10 + "%");
-            System.out.println("Resumen: " + popularMovie.getOverview());
-            System.out.println("------------------------");
-        }
+        popularMovies.forEach(popularMovie -> System.out.println("Título: " + popularMovie.getTitle() +
+                "\nCalificación: "+popularMovie.getVote_average()*10 + "%" + "\nResumen: "+popularMovie.getOverview()+
+                "\n------------------------"));
     }
 
     public void printPreferredMovies(String sort_by,int year) throws IOException {
         List<TMDbData.Movie> preferMovie = apiClient.fetchMoviePrefer(returnSortByType(sort_by),year);
-        for (TMDbData.Movie movie : preferMovie) {
-            System.out.println("Título: " + movie.getTitle());
-            System.out.println("Calificación: " + movie.getVote_average()*10 + "%");
-            System.out.println("Resumen: " + movie.getOverview());
-            System.out.println("------------------------");
-        }
+        preferMovie.forEach(movie -> System.out.println("Título: " + movie.getTitle() +
+                "\nCalificación: "+movie.getVote_average()*10 + "%"+
+                "\nResumen: "+ movie.getOverview()+"\n------------------------"));
     }
     public String returnSortByType(String sort){
         if (sort.equals("1"))
